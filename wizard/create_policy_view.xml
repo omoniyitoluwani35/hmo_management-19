@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	 <record id="create_policy_view" model="ir.ui.view">
+         <field name="name">Create Policy</field>
+         <field name="model">create.policy</field>
+         <field name="arch" type="xml">
+             <form string="Create Policy">
+                   <separator colspan="4" string="Create customer policy"/>
+				    <group>
+						<field name="start_date" />
+						<field name="end_date" />
+						<field name="quantity" />
+				   </group>
+                   <footer>
+				     <button name="generate_policy" string="Create Customer Policy" type="object" class="oe_highlight"/>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+    </record>
+	
+	<record id="policy_operations_view" model="ir.ui.view">
+         <field name="name">Policy Operations</field>
+         <field name="model">create.policy</field>
+         <field name="arch" type="xml">
+             <form string="Policy Operations">
+                   <separator colspan="4" string="Create customer policy"/>
+				   
+				    <group>
+						<field name="customer_id" />
+						<field name="start_date" />
+						<field name="end_date" />
+						<field name="quantity" />
+				   </group>
+                   <footer>
+				     <button name="policy_operations" string="Create Customer Policy" type="object" class="oe_highlight"/>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+    </record>
+	
+	<record id="action_view_wizard_create_policy" model="ir.actions.act_window">
+            <field name="name">Create Policy</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.policy</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="create_policy_view"/>
+            <field name="target">new</field>
+    </record>
+	
+	<record id="action_view_wizard_policy_operations" model="ir.actions.act_window">
+            <field name="name">Policy Operations</field>
+				<field name="type">ir.actions.act_window</field>
+				<field name="res_model">create.policy</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="policy_operations_view"/>
+            <field name="target">new</field>
+    </record>
+		
+	<act_window id="create_policy" name="Create Additional Policy" res_model="create.policy" binding_model="enrollee" view_mode="form" target="new" />
+	
+</odoo>

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+       <!-- Operations menu item -->
+        <menuitem name="Operations"
+            id="menu_operations_root"
+            groups="group_operations_menu"
+            web_icon="purchase,static/description/icon.png"
+            sequence="26"/>
+		
+		 <menuitem id="menu_master_data" name="Master Data"
+            parent="menu_operations_root" sequence="1"/>
+		
+		<menuitem id="menu_claims_processing" name="Claims Processing"
+            parent="menu_operations_root" sequence="2"/>
+		
+		<menuitem id="menu_authorization" name="Authorization"
+			groups="hmo_management.group_call_center"
+            parent="menu_operations_root" sequence="3"/>
+		
+		<menuitem id="menu_auth_code" name="Pre Authorization"
+            parent="menu_authorization"
+			action="hmo_management.pre_auth_claims_action" sequence="1"/>
+			
+		<menuitem id="menu_auth_code_request" name="Authorization Request"
+            parent="menu_authorization"
+			action="hmo_management.pre_auth_claims_action_request" sequence="2"/>
+			
+		<menuitem id="menu_auth_code_reject" name="Rejected Auth. Requests"
+            parent="menu_authorization"
+			action="hmo_management.pre_auth_claims_action_reject" sequence="3"/>
+		
+        <menuitem id="menu_claims_registration" name="Claims Registration"
+            parent="menu_claims_processing"
+			action="hmo_management.claims_registration_list_view" sequence="1"/>
+
+		<menuitem id="menu_claims_management" name="All Claims"
+            parent="menu_claims_processing"
+			action="hmo_management.claims_list_view" sequence="2"/>
+		
+		<menuitem id="menu_draft_claims" name="Draft Claims"
+            parent="menu_claims_processing"
+			action="hmo_management.draft_claims_action" sequence="3"/>
+		
+		<menuitem id="menu_submitted_claims" name="Submitted Claims"
+            parent="menu_claims_processing"
+			action="hmo_management.submitted_claims_action" sequence="4"/>
+		
+		<menuitem id="menu_to_approve_claims" name="Claims To Approve"
+            parent="menu_claims_processing"
+			groups="purchase.group_purchase_manager"
+			action="hmo_management.claims_to_approve_action" sequence="5"/>
+		
+		<menuitem id="menu_processed_claims" name="Processed Claims"
+            parent="menu_claims_processing"
+			groups="hmo_management.group_executive"
+			action="hmo_management.claims_processed_action" sequence="6"/>
+		
+		<menuitem id="menu_enrollee_management" name="Enrollees"
+            parent="menu_master_data"
+			action="hmo_management.enrollee_list_view" sequence="3"/>
+			
+		<menuitem id="menu_claims_configuration" name="Configuration"
+            parent="menu_operations_root" sequence="9"/>
+			
+		<menuitem id="menu_icd_management" name="ICD Classification"
+            parent="menu_claims_configuration"
+			action="hmo_management.icd_list_view" sequence="5"/>
+     		
+		<menuitem id="menu_hcp_management" name="Providers"
+            parent="menu_master_data"
+			action="action_HCPs" sequence="1"/>
+		
+		<menuitem id="menu_services_management" name="Drugs and Services"
+            parent="menu_master_data"
+			action="product_drugs_action" sequence="2"/>
+		
+		 <menuitem id="menu_hospital_data" name="Encounters"
+            parent="menu_operations_root" sequence="3"/>
+			
+		<menuitem id="menu_visitation" name="Visitations"
+            parent="menu_hospital_data"
+			action="hmo_management.visitation_list_view" sequence="1"/>
+			
+	     <menuitem id="menu_encounter" name="Encounters"
+            parent="hmo_management.menu_hospital_data"
+			action="encounter_action" sequence="2"/>
+			
+		<menuitem id="menu_vendor_bills_claims" name="Vendor Bills"
+            parent="menu_claims_processing"
+			groups="hmo_management.group_provider_bill"
+			action="hmo_management.action_claims_invoice_pending" sequence="7"/>
+		     		
+		 <menuitem id="menu_tariff_management" name="Tariffs"
+            parent="menu_master_data"
+			action="tariff_action" sequence="5"/>
+			
+		 <menuitem id="menu_benefit_category" name="Benefit Category"
+            parent="hmo_management.menu_claims_configuration"
+			action="benefit_category_list_view" sequence="3"/>
+			
+	<menuitem id="menu_benefit" name="Benefit"
+            parent="hmo_management.menu_claims_configuration"
+			action="benefit_list_view" sequence="4"/>
+	
+	<menuitem id="menu_plan_benefit" name="Plan Benefit"
+            parent="hmo_management.menu_master_data"
+			action="plan_benefit_list_view" sequence="5"/>
+			
+    <!-- Policies -->
+	 <menuitem name="Clients"
+            id="menu_clientss_root"
+            web_icon="sale,static/description/icon.png"
+            sequence="8"/>
+		
+		<menuitem id="menu_policies" name="Policy Management"
+            parent="menu_clientss_root" sequence="1"/>
+
+        <menuitem id="menu_policy_quotations" name="Policy Quotations"
+            parent="menu_policies"
+			action="hmo_management.draft_policy_action" sequence="1"/>
+			
+		 <menuitem id="menu_policy_orders" name="Policy"
+            parent="menu_policies"
+			action="hmo_management.policy_action" sequence="2"/>
+			
+		<menuitem id="menu_client_operations" name="Client Operations"
+            parent="hmo_management.menu_clientss_root" sequence="2"/>
+		
+		<menuitem id="menu_enrollee" name="Enrollees"
+            parent="menu_client_operations"
+			action="hmo_management.enrollee_list_view" sequence="1"/>
+
+        <menuitem id="menu_policy_operation" name="Create Policy "
+            parent="menu_client_operations"
+			action="action_view_wizard_create_policy" sequence="2"/>
+			
+		 <menuitem id="menu_policy_operation" name="Policy Operations"
+            parent="menu_client_operations"
+			action="action_view_wizard_policy_operations" sequence="3"/>
+			
+			<menuitem id="menu_enrollee_operation" name="Enrollee Operations"
+            parent="menu_client_operations"
+			action="hmo_management.action_view_enrollee_wizard" sequence="4"/>
+			
+		 <menuitem id="menu_providers" name="Providers"
+            parent="menu_client_operations"
+			action="hmo_management.action_HCPs" sequence="5"/> 
+			
+	     <menuitem id="menu_birthdays" name="Birthdays"
+            parent="menu_client_operations"
+			action="action_view_birthday_wizard" sequence="6"/>
+		<menuitem id="menu_capitation_report" name="Capitation Reports"
+            parent="menu_client_operations"
+			action="capitation_report_action" sequence="7"/>
+	     <!-- Actuary -->
+		 <menuitem name="Analysis"
+            id="menu_analysis_root"
+            web_icon="product,static/description/icon.png"
+			groups="group_actuary"
+            sequence="8"/>
+	<menuitem id="menu_actuary" name="Actuary"
+            parent="menu_analysis_root" 
+			sequence="2"/>
+	
+	<menuitem id="menu_actuary_reports" name="Actuary Reports"
+            parent="menu_actuary" 
+			action="action_view_actuary_wizard" sequence="1"/>
+			
+	<menuitem id="menu_actuary_claims" name="All Claims"
+            parent="menu_analysis_root" 
+			action="claims_list_actuary_view" sequence="1"/>
+			
+	<menuitem id="menu_client_config" name="Configuration"
+            parent="hmo_management.menu_clientss_root" sequence="3"/>
+	
+	<menuitem id="menu_lga" name="LGAs"
+            parent="menu_client_config"
+			action="hmo_management.lga_view" sequence="1"/>
+	
+	<record id="action_print_technical_invoice" model="ir.actions.report">
+		   <field name="name">Payment Advice</field>
+		   <field name="model">account.move</field>
+		   <field name="report_type">qweb-pdf</field>
+		   <field name="report_name">hmo_management.report_invoice_payment_advice</field>
+		   <field name="report_file">hmo_management.report_invoice_payment_advice</field>
+		   <field name="print_report_name">'%s' % (object.name)</field>
+		   <field name="binding_model_id" ref="model_account_move"/>
+	</record>
+</odoo>

@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+         <record id="view_product_template_form_inherit" model="ir.ui.view">
+        	<field name="name">Product</field>
+        	<field name="model">product.template</field>
+        	<field name="inherit_id" ref="product.product_template_form_view"/>
+        	<field name="arch" type="xml">
+            	<xpath expr="//div[@name='options']" position="inside">	
+                		 <field name="is_drug" />
+						 <label for="is_drug"/>
+					     <field name="is_nhis"/>
+						 <label for="is_nhis"/>
+            	</xpath> 
+
+                <xpath expr="//group[@name='group_general']" position="inside">	
+					     <field name="benefit_id" invisible="not sale_ok"/>
+						<field name="stockable" invisible="not purchase_ok"/>
+            	</xpath>     	
+                 
+                <xpath expr="//group[@name='group_standard_price']" position="inside">	
+                		 <field name="plan_limit" invisible="not sale_ok" />
+						 <field name="cap_amount" invisible="not purchase_ok"/>
+            	</xpath>     				 
+		
+		</field>
+</record>
+   
+    </data>
+</odoo>

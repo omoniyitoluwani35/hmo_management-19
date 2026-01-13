@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <record id="view_visitation_list" model="ir.ui.view">
+        <field name="name">visitation.list</field>
+        <field name="model">visitation</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <list string="Visitation and Admission">
+                <field name="name" />           
+                <field name="hcp"/>
+                <field name="diagnosis" />
+				<field name="visit_date" />
+				<field name="admission_date" />
+				<field name="discharge_date" />
+				<field name="auth_code" />
+				<field name="comment" />
+				<field name="create_uid" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_visitation_form" model="ir.ui.view">
+        <field name="name">visitation.form</field>
+        <field name="model">visitation</field>
+        <field name="arch" type="xml">
+		
+			<form string="Visitation">
+				<group>
+					<group>
+					   <field name="name"/>
+					   <field name="hcp"/>
+					   <field name="employer"/>
+					   <field name="auth_code"/>
+					   <field name="diagnosis"/>
+					</group>
+					<group>
+					   <field name="visit_date"/>
+					   <field name="admission_date"/>
+					   <field name="discharge_date"/>
+					   <field name="active"/>
+					   <field name="contact"/>
+					</group>
+				</group>
+				<notebook>
+					<page string="History">
+						<label for="complaint"/>
+						   <div><field name="complaint"/></div>
+						<label for="finding"/>
+							<div><field name="finding"/></div>
+						<label for="comment"/>
+						  <div><field name="comment"/></div>
+					</page>
+					<page string="Investigations/Treatment Plan">
+						 <field name="plan_id"/>
+					</page>
+					<page string="Approved Treatment">
+						 <field name="approved_id"/>
+					</page>
+				</notebook>
+			</form>
+		
+        </field>
+    </record>
+	
+	<record id="visitation_search_view" model="ir.ui.view">
+		<field name="name">visitation.search</field>
+		<field name="model">visitation</field>
+		<field name="arch" type="xml">
+			<search string="Visitation">         
+				<field name="name" string="Enrollee"/>
+				<field name="hcp" string="HCP"/>
+				<separator/>
+				<group>
+					<filter string="HCP" name="filter_group_hcp" domain="[]" context="{'group_by': 'hcp'}" />
+					<filter string="Enrollee" name="filter_group_enrollee" domain="[]" context="{'group_by': 'name'}" />
+				</group>
+			</search>
+		</field>
+	</record>
+	
+	<record id = "visitation_list_view" model = "ir.actions.act_window">
+        <field name = "name">Visitation</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">visitation</field>
+        <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "view_visitation_list"/>
+   </record>
+   
+</odoo>

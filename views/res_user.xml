@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_users_form_hmo" model="ir.ui.view">
+        <field name="name">res.users.form.hmo</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='access_rights']" position="after">
+                <page string="HMO Management" name="hmo_management">
+                    <group>
+                        <field name="group_ids" 
+                               widget="many2many_checkboxes" 
+                               domain="[('id', 'in', [
+                                   %(hmo_management.group_enrollee_readonly)d,
+                                   %(hmo_management.group_enrollee_operations)d,
+                                   %(hmo_management.group_enrollee_admin)d,
+                                   %(hmo_management.group_call_center)d,
+                                   %(hmo_management.group_executive)d,
+                                   %(hmo_management.group_health_services)d,
+                                   %(hmo_management.group_approve_claims)d,
+                                   %(hmo_management.group_process_claims)d,
+                                   %(hmo_management.group_provider_bill)d,
+                                   %(hmo_management.group_provider_portal)d,
+                                   %(hmo_management.group_actuary)d,
+                                   %(hmo_management.group_operations_menu)d,
+                                   %(hmo_management.group_purchase_menu)d,
+                                   %(hmo_management.group_purchase_confirm_button)d
+                               ])]"
+                               nolabel="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+</odoo>

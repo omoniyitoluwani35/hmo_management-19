@@ -1,0 +1,68 @@
+<!--Custom report.-->
+<openerp>
+<data>
+<template id="actuary_reports_report">
+    <t t-call="report.external_layout">
+        <t t-set="data_report_margin_top" t-value="12"/>
+        <t t-set="data_report_header_spacing" t-value="9"/>
+        <t t-set="data_report_dpi" t-value="110"/>
+        <t t-foreach="docs" t-as="o">
+		<t t-set="data_report_dpi" t-value="110"/>
+            <t t-call="report.internal_layout">
+				<div class="page">
+				 <br/>
+					<h3>Actuary Report: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d ')"/> </h3>				
+				
+				 <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                
+								<th>Serial</th>
+								<th>Code</th>
+                                <th>Surname</th>
+                                <th>First Name</th>
+                                <th>Other Name</th>
+								 <th>Plan</th>
+								<th>Coverage</th>
+                            </tr>
+                        </thead>
+						<tbody>
+						<t t-set="i" t-value="0" /> 
+					
+						 <tr t-foreach="datas(o)" t-as="line">
+								
+						         <td>
+								 <t t-set="i" t-value="i+1"/> 
+								  <span t-esc="i"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['name']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['x_surname']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['firstname']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['othername']"/>
+                                </td>
+								<td>
+                                    <span t-esc="line['name_template']"/>
+                                </td>
+								
+								
+                         </tr>
+						
+						Total Enrollees:<t t-esc="i" />.     
+						 <br/>
+                        </tbody>
+				 </table>
+                </div>
+            </t>
+        </t>
+    </t>
+			
+</template>
+</data>
+</openerp>

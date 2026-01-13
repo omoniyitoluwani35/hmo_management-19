@@ -1,0 +1,32 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_enrollee_operations,Enrollee Operations,hmo_management.model_enrollee,hmo_management.group_enrollee_operations,1,1,1,0
+access_enrollee_readonly,Enrollee Readonly,hmo_management.model_enrollee,hmo_management.group_enrollee_readonly,1,0,0,0
+access_tariff_management,Tariff Management,hmo_management.model_tariff,hmo_management.group_enrollee_operations,1,1,1,1
+access_tariff_lines,Tariff Lines,hmo_management.model_tariff_lines,hmo_management.group_enrollee_operations,1,1,1,1
+access_operations_category,Operations Category,hmo_management.model_benefit_category,hmo_management.group_enrollee_operations,1,1,1,1
+access_operations_benefit,Operations Benefits,hmo_management.model_benefit,hmo_management.group_enrollee_operations,1,1,1,1
+access_operations_plan_bene,Operations Plan Benefits,hmo_management.model_plan_benefit,hmo_management.group_enrollee_operations,1,1,1,1
+access_operations_bene_lines,Operations Benefit Lines,hmo_management.model_benefit_lines,hmo_management.group_enrollee_operations,1,1,1,1
+access_diag,Operations Diagnosis,hmo_management.model_claims_diagnosis,hmo_management.group_enrollee_operations,1,1,1,1
+claims_reg,Claims Registration,hmo_management.model_claims_registration,hmo_management.group_enrollee_operations,1,1,1,1
+access_encounter,Encounter Access,hmo_management.model_encounter,hmo_management.group_enrollee_operations,1,1,1,1
+access_encounter_hs,Encounter Access HS,hmo_management.model_encounter,hmo_management.group_health_services,1,1,1,1
+access_visit,Visitation Access,hmo_management.model_visitation,hmo_management.group_enrollee_operations,1,1,1,1
+access_visitr_hs,Visitation Access HS,hmo_management.model_visitation,hmo_management.group_health_services,1,1,1,1
+access_birthday_report,Birthday Report,hmo_management.model_monthly_birthday_report_output_wizard,hmo_management.group_enrollee_readonly,1,1,1,1
+access_birthday_report_wizard,Birthday Report Wizard,hmo_management.model_monthly_birthday_reports,hmo_management.group_enrollee_readonly,1,1,1,1
+access_policy_operations,Policy Operations,hmo_management.model_create_policy,hmo_management.group_enrollee_admin,1,1,1,1
+access_enrollee_operations_wizard,Enrollee Operations Wizard,hmo_management.model_enrollee_operations,hmo_management.group_enrollee_admin,1,1,1,1
+access_create_capitation,Create Additional Capitation,hmo_management.model_create_capitation,hmo_management.group_enrollee_admin,1,1,1,1
+access_capitation_reports,Capitation Report Access,hmo_management.model_capitation_report,hmo_management.group_enrollee_readonly,1,1,1,1
+access_capitation_reports_actuary,Capitation Report Actuary Access,hmo_management.model_capitation_report,hmo_management.group_actuary,1,1,1,1
+access_capitation_reports_IT,Capitation Report IT Access,hmo_management.model_capitation_report,hmo_management.group_enrollee_admin,1,1,1,1
+access_actuary_reports_output_wizard,Actuary Reports,hmo_management.model_actuary_report_output_wizard,hmo_management.group_actuary,1,1,1,1
+access_actuary_report_wizard,Actuary Report Wizard,hmo_management.model_actuary_reports,hmo_management.group_actuary,1,1,1,1
+access_claims,Claims Actuary Access,hmo_management.model_purchase_order,hmo_management.group_actuary,1,0,0,0
+access_claims_lines,Claims Lines Actuary Access,hmo_management.model_purchase_order_line,hmo_management.group_actuary,1,0,0,0
+access_diagnosis,Diagnosis Management,hmo_management.model_claims_diagnosis,hmo_management.group_actuary,1,0,0,0
+access_claims_reg,Claims Registration,hmo_management.model_claims_registration,hmo_management.group_actuary,1,0,0,0
+icd,ICD,hmo_management.model_icd,hmo_management.group_enrollee_operations,1,1,1,1
+lga,LGA,hmo_management.model_lga,hmo_management.group_enrollee_operations,1,0,0,0
+lga_it,LGA IT,hmo_management.model_lga,hmo_management.group_enrollee_admin,1,1,1,1

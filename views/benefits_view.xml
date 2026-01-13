@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <record id="view_benefit_category_list" model="ir.ui.view">
+        <field name="name">benefit.category.list</field>
+        <field name="model">benefit.category</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <list string="Benefit Category">
+                <field name="name" />           
+            </list>
+        </field>
+    </record>
+	
+	<record id="view_benefit_category_form" model="ir.ui.view">
+        <field name="name">benefit.category.form</field>
+        <field name="model">benefit.category</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <form string="Benefit Category">
+				<group>
+					<field name="name" />   
+				</group>
+            </form>
+        </field>
+    </record>
+	
+	<record id="view_benefit_list" model="ir.ui.view">
+        <field name="name">benefit.list</field>
+        <field name="model">benefit</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <list string="Benefit">
+                <field name="name" />   
+				<field name="category_id" />  
+            </list>
+        </field>
+    </record>
+	
+	<record id="view_benefit_form" model="ir.ui.view">
+        <field name="name">benefit.form</field>
+        <field name="model">benefit</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <form string="Benefit">
+				<group>
+					<field name="name" />   
+					<field name="category_id" />  
+				</group>
+            </form>
+        </field>
+    </record>
+   
+	
+	<record id="view_plan_benefit_list" model="ir.ui.view">
+        <field name="name">plan.benefit.list</field>
+        <field name="model">plan.benefit</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <list string="Plan Benefit">
+                <field name="name" />   
+            </list>
+        </field>
+    </record>
+	
+	<record id="view_plan_benefit_form" model="ir.ui.view">
+        <field name="name">plan.benefit.form</field>
+        <field name="model">plan.benefit</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <form string="Plan Benefit">
+				<group>
+					<group>
+						<field name="name" required="1"/>
+						<field name="plan_id" required="1" domain="[('product_tmpl_id.categ_id.name','=','Plans')]"/>
+					</group>
+					
+					<notebook>
+						<page string = "Benefits">
+							<field name="line_id" string="Details">
+								<list string="Details" editable="bottom">
+									<field name="name"/>
+									<field name="remarks"/>
+								</list>
+							</field>
+						</page>
+						<page string = "Customers">
+							<field name="employer_ids" string="Customers" >
+								<list string="Customers" editable="bottom">
+									<field name="name" domain="[('customer_rank','&gt;',0)]"  options="{'no_create': True}"/>
+								</list>
+							</field>
+						</page>
+					</notebook>
+					
+					
+				</group>
+            </form>
+        </field>
+    </record>
+	
+	<record id="view_benefit_lines_form" model="ir.ui.view">
+        <field name="name">benefit.lines.form</field>
+        <field name="model">benefit.lines</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <form string="Benefit">
+				<group>
+					<field name="name" />   
+					<field name="plan_benefit_id" />  
+					<field name="remarks"/>
+				</group>
+            </form>
+        </field>
+    </record>
+	
+	
+	<record id = "benefit_category_list_view" model = "ir.actions.act_window">
+        <field name = "name">Benefit Category</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">benefit.category</field>
+        <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "view_benefit_category_list"/>
+   </record>
+   
+   <record id = "benefit_list_view" model = "ir.actions.act_window">
+        <field name = "name">Benefit</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">benefit</field>
+        <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "view_benefit_list"/>
+   </record>
+   
+    <record id = "plan_benefit_list_view" model = "ir.actions.act_window">
+        <field name = "name">Plan Benefit</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">plan.benefit</field>
+        <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "view_plan_benefit_list"/>
+   </record>
+   
+  
+   
+</odoo>

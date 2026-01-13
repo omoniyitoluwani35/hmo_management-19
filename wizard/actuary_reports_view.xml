@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="actuary_reports_view" model="ir.ui.view">
+         <field name="name">Actuary Reports</field>
+         <field name="model">actuary.reports</field>
+         <field name="arch" type="xml">
+             <form string="Actuary Reports">
+                   <separator colspan="4" string="Run actuary reports"/>
+				   <group>
+						<field name="action" />
+						<field name="status" />
+						<field name="start_d" />
+						<field name="end_d" />
+				   </group>
+				   
+                   <footer>
+				     <button name="actuary_report" string="Run Report" type="object" class="oe_highlight"/>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+    </record>
+	
+	
+	
+	<record id="action_view_actuary_wizard" model="ir.actions.act_window">
+            <field name="name">Actuary Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">actuary.reports</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="actuary_reports_view"/>
+            <field name="target">new</field>
+    </record>
+	
+	 <record id="actuary_xls_output_view" model="ir.ui.view">
+         <field name="name">Actuary Report Excel Output</field>
+         <field name="model">actuary.report.output.wizard</field>
+         <field name="arch" type="xml">
+             <form string="Excel Output">
+                   <separator colspan="4" string="Please save file as .xls excel format"/>
+                   <field name="name" invisible="1"/>
+                   <field name="xls_output" filename='name'/>
+                   <footer>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+       </record>
+	   
+
+	<record id="view_actuary_claims_list" model="ir.ui.view">
+        <field name="name">claims.list</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <list string="Claims">
+			
+                    
+					<field name="name"/>
+                    <field name="date_order"/>
+                    <field name="partner_id" string ="Provider"/>
+					<field name="analytic_id"/>  
+					<field name="nhis_ref"/>    
+					<field name="enrollee_code"/>
+                    <field name="enrollee_id"/>
+					<field name="plan_id"/>  
+					<field name="diagnosis"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="date_planned" invisible="1"/>                 
+                    <field name="provider_total" sum="Total amount" widget="monetary" string="Amount on Bill"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" string="Amount Vetted"/>
+                    <field name="amount_difference"/>
+                    <field name="state"/>
+                    <field name="invoice_status"/>
+                  </list>
+        </field>
+    </record>
+	
+	<record id = "claims_list_actuary_view" model = "ir.actions.act_window">
+        <field name = "name">Claims</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_actuary_claims_list"/>
+   </record>
+	
+	
+	<report 
+     id="action_report_actuary"
+     model="actuary.reports"
+     string="Actuary report"
+     report_type="qweb-pdf"
+     name="actuary_reports.actuary_reports_report"
+     file="actuary_reports.actuary_reports_report" 
+/>
+
+	
+</odoo>

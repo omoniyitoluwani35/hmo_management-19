@@ -1,0 +1,193 @@
+<odoo>
+    <data>
+        <!-- Inherit quotation report (from module sale) -->
+        <template id="report_quotation_inherit_demo" inherit_id="sale.report_saleorder_document">
+	    <!-- Finds the first table with as class table table-sm o_main_table and gives the ability to modify it
+		 This will replace everything withing tr (including tr)-->
+		   <xpath expr="//div[@id='informations']" position="after">
+			 <div class="row mt-4 mb-4" id="informations2">
+				<t t-if="doc.doc_type == 'policy'">
+					<div class="col-auto col-3 mw-100 mb-2" name="info_summary">
+						<strong>Totals:</strong>
+						
+					</div>
+					<div class="col-auto col-3 mw-100 mb-2" name="beg_date">
+						<strong>Begin Date:</strong>
+						<p class="m-0" t-field="doc.start_date"/>
+					</div>
+					<div class="col-auto col-3 mw-100 mb-2" name="end_date">
+						<strong>End Date:</strong>
+						<p class="m-0" t-field="doc.end_date"/>
+					</div>
+				</t>
+			</div>
+          </xpath>
+	    <xpath expr="//table[hasclass('o_main_table')]" position="replace">
+            <span t-if="doc.doc_type == 'policy'">
+		
+		<br/>
+					<t t-set="enrollee_count" t-value="doc.sum_enrollees('select l.name,count(l.name) from sale_order_line l inner join sale_order s on s.id = l.order_id 
+where s.id = %s group by l.name' % doc.id)"/>
+						<tr>
+							<td>
+							    <t t-foreach="enrollee_count" t-as="enrol">
+								<t t-set="ep" t-value="enrol['name']"/>
+								<t t-set="ep1" t-value="ep.replace('en_US','')"/>
+								<t t-set="ep2" t-value="ep1.replace('{','')"/>
+								<t t-set="ep3" t-value="ep2.replace('}','')"/>
+								<t t-set="ep4" t-value="ep3.replace(':','')"/>
+								<t t-set="ep5" t-value='ep4.replace("&#39;","")'/>
+								<span t-esc="ep5"/>:<span t-esc="enrol['count']"/>
+								<br/>
+								</t>
+							</td>
+						</tr>
+<br/>
+		         
+				 <table class="table table-sm o_main_table table-borderless mt-4">
+                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                <thead style="display: table-row-group">
+                    <tr>
+                        <th name="th_description" class="text-start">Plan</th>
+                        <th name="th_quantity" class="text-start">ID Number</th>
+                        <th name="th_priceunit" class="text-start">Name</th>
+                        <th name="th_discount" class="text-start" >Provider  </th>
+                        <th name="th_taxes" class="text-start">Price</th>
+						<th name="th_taxes" class="text-start">Duration</th>
+                        <th name="th_subtotal" class="text-start">Sub Total</th>
+                    </tr>
+                </thead>
+                <tbody class="sale_tbody">
+
+                    <t t-set="current_subtotal" t-value="0"/>
+
+                    <t t-foreach="lines_to_report" t-as="line">
+						<t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+						<t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+                        <tr>
+                            <td>
+                               <span t-field="line.product_id.name"/>
+                            </td>
+                            <td >
+                                <span t-field="line.enrollee_id.code"/>
+                    
+                            </td>
+                            <td >
+                               <span t-field="line.enrollee_id.surname"/> <span t-field="line.enrollee_id.firstname"/>
+                            </td>
+                            <td >
+                                <span t-field="line.provider_id.name"/>
+                            </td>
+                            <td >
+                                <span t-field="line.price_unit"/>
+                            </td>
+							<td  class="text-center">
+                                <span t-field="line.duration"/>
+                            </td>
+							  <td >
+                                <span t-field="line.price_subtotal"/>
+                            </td>
+							<t t-if="line.display_type == 'line_section'">
+                                <td name="td_section_line" colspan="99">
+                                    <span t-field="line.name"/>
+                                </td>
+                                <t t-set="current_section" t-value="line"/>
+                                <t t-set="current_subtotal" t-value="0"/>
+                            </t>
+                            <t t-if="line.display_type == 'line_note'">
+                                <td name="td_note_line" colspan="99">
+                                    <span t-field="line.name"/>
+                                </td>
+                            </t>
+                        </tr>
+
+                        <t t-if="current_section and (line_last or doc.order_line[line_index+1].display_type == 'line_section') and not line.is_downpayment">
+                            <tr class="is-subtotal text-end">
+                                <td name="td_section_subtotal" colspan="99">
+                                    <strong class="mr16">Subtotal</strong>
+                                    <span t-out="current_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/>
+                                </td>
+                            </tr>
+                        </t>
+                    </t>
+                </tbody>
+            </table>
+			  </span>
+			   <span t-if="doc.doc_type != 'policy'">
+					<table class="table table-sm o_main_table table-borderless mt-4">
+					<!-- In case we want to repeat the header, remove "display: table-row-group" -->
+					<thead style="display: table-row-group">
+						<tr>
+							<th name="th_description" class="text-start">Description</th>
+							<th name="th_quantity" class="text-end">Quantity</th>
+							<th name="th_priceunit" class="text-end">Unit Price</th>
+							<th name="th_discount" t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+								<span>Disc.%</span>
+							</th>
+							<th name="th_taxes" class="text-end">Taxes</th>
+							<th name="th_subtotal" class="text-end">
+								<span groups="account.group_show_line_subtotals_tax_excluded">Amount</span>
+								<span groups="account.group_show_line_subtotals_tax_included">Total Price</span>
+							</th>
+						</tr>
+					</thead>
+					<tbody class="sale_tbody">
+
+						<t t-set="current_subtotal" t-value="0"/>
+
+						<t t-foreach="lines_to_report" t-as="line">
+
+							<t t-set="current_subtotal" t-value="current_subtotal + line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+							<t t-set="current_subtotal" t-value="current_subtotal + line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+
+							<tr t-att-class="'bg-200 fw-bold o_line_section' if line.display_type == 'line_section' else 'fst-italic o_line_note' if line.display_type == 'line_note' else ''">
+								<t t-if="not line.display_type">
+									<td name="td_name"><span t-field="line.name"/></td>
+									<td name="td_quantity" class="text-end">
+										<span t-field="line.product_uom_qty"/>
+										<span t-field="line.product_uom_id"/>
+									</td>
+									<td name="td_priceunit" class="text-end">
+										<span t-field="line.price_unit"/>
+									</td>
+									<td t-if="display_discount" class="text-end" groups="product.group_discount_per_so_line">
+										<span t-field="line.discount"/>
+									</td>
+									<td name="td_taxes" class="text-end">
+										<span t-out="', '.join(map(lambda x: (x.description or x.name), line.tax_ids))"/>
+									</td>
+									<td t-if="not line.is_downpayment" name="td_subtotal" class="text-end o_price_total">
+										<span t-field="line.price_subtotal" groups="account.group_show_line_subtotals_tax_excluded"/>
+										<span t-field="line.price_total" groups="account.group_show_line_subtotals_tax_included"/>
+									</td>
+								</t>
+								<t t-if="line.display_type == 'line_section'">
+									<td name="td_section_line" colspan="99">
+										<span t-field="line.name"/>
+									</td>
+									<t t-set="current_section" t-value="line"/>
+									<t t-set="current_subtotal" t-value="0"/>
+								</t>
+								<t t-if="line.display_type == 'line_note'">
+									<td name="td_note_line" colspan="99">
+										<span t-field="line.name"/>
+									</td>
+								</t>
+							</tr>
+
+							<t t-if="current_section and (line_last or doc.order_line[line_index+1].display_type == 'line_section') and not line.is_downpayment">
+								<tr class="is-subtotal text-end">
+									<td name="td_section_subtotal" colspan="99">
+										<strong class="mr16">Subtotal</strong>
+										<span t-out="current_subtotal" t-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: doc.pricelist_id.currency_id}"/>
+									</td>
+								</tr>
+							</t>
+						</t>
+					</tbody>
+				</table>
+			</span>
+		</xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+	<template id="dev_enr_detail_report">    
+			<div style="font-size:9px;{{'page-break-after: always;' if not o_last else ''}}">
+            <div class="page-front"> <div class="row" style="margin-top:12px;font-family: verdana;">
+                    <div class="col-xs-12">
+                        <table width="100%" style="border-bottom-color:red; border-bottom-style:solid; border-bottom-width:2px;border-collapse:collapse; border-spacing:0" cellpadding="0">
+                            <tr>
+                                 <td width="15%" style="text-align:right; display: block;"> <center>    <t t-if="o['has_image'] == 'true'" t-set="company_logo" t-value="get_logo(o['employer'])"/>
+                                    <img t-if="company_logo" t-att-src="image_data_uri(company_logo)" style="height: 30px;width: 75px;border-radius: 0px; display: block; margin: 0 auto;"/> <img t-if=" o['has_image'] == 'false'" t-att-src="image_data_uri(company.logo)" style="height: 30px;width: 30px;border-radius: 0px; display: block; margin: 0 auto;"/></center>
+                                    </td>
+                                    <td width="85%" cellpadding="0">
+                                        <h5 style="padding:0;margin:0;"><center><strong>AIICO Multishield Ltd</strong></center></h5>
+                                        <h6 style="padding:0;margin:0; letter-spacing:1px;color:red;"><center>(Health Maintenance Organization)</center></h6>
+
+                                </td>
+                            </tr>
+                        </table>
+                        <table width="100%" style="border-collapse:collapse; border-spacing:0; font-weight:bold; letter-spacing:1px;" cellpadding="0">
+                            <tr>
+                                 <td width="15%">
+                                    <center><br/></center>
+                                    </td>
+                                    <td width="85%" cellpadding="0">
+
+                                        <h6 style="padding:0;margin:0;background-color:steelblue;"><center><strong><t t-esc="o['plan']"/></strong></center></h6>
+                                </td>
+                            </tr>
+                        </table>
+                        <br/>
+                        <table width="100%" style="border-collapse:collapse; border-spacing:0;padding: 0;margin:0; text-transform: uppercase;font-weight:bold; letter-spacing:1px; font-size:8px; font-family:arial;" cellpadding="0">
+                            <tr>
+                                 <td width="30%" rowspan="15" style="vertical-align:top; text-align:left; display: block; padding-right: 5px;"> <t t-if="o['enrollee_pic'] == 'true'" t-set="enrollee_logo" t-value="get_enrollee_pic(o['id'])"/>
+                                     <img t-if="enrollee_logo" t-att-src="image_data_uri(enrollee_logo)" style="height: 120px;width: 100px;border-radius: 0px; display: block;"/> </td>
+                                    <td width="18%" style="background-color:midnightblue; color:white;">
+                                        <center>ID NUMBER</center>
+                                    </td>
+                                    <td>
+                                        <center><br/></center>
+                                    </td>
+                                    <td width="52%">
+                                        <t t-esc="o['code']"/>
+                                    </td>
+                            </tr>
+                            <tr><td><center><br/></center></td></tr>
+                            <tr>
+                                <td style="background-color:midnightblue; color:white;">
+                                    <center>NAME</center>
+                                </td>
+                                <td>
+                                    <center><br/></center>
+                                </td>
+                                <td>
+                                    <t t-esc="o['surname']"/>  <t t-esc="o['firstname']"/>  <t t-esc="o['othername']"/>
+                                </td>
+                            </tr>
+                            <tr><td><center><br/></center></td></tr>
+                            <tr>
+                                <td style="background-color:midnightblue; color:white;">
+                                    <center>ADDRESS</center>
+                                </td>
+                                <td width="2%">
+                                    <center><br/></center>
+                                </td>
+                                <td style="word-break: break-word; line-height: 1.2; vertical-align: middle;">
+                                    <t t-esc="o['address']"/>
+                                </td>
+                            </tr>
+                            <tr><td><center><br/></center></td></tr>
+                            <tr>
+                                <td style="background-color:midnightblue; color:white;">
+                                    <center>STATE</center>
+                                </td>
+                                <td width="2%">
+                                    <center><br/></center>
+                                </td>
+                                <td>
+                                    <span t-esc="o['state']"/>
+                                </td>
+                            </tr>
+                            <tr><td><center><br/></center></td></tr>
+                            <tr>
+                                <td style="background-color:midnightblue; color:white;">
+                                    <center>HOSP NAME</center>
+                                </td>
+                                <td width="2%">
+                                    <center><br/></center>
+                                </td>
+                                <td style="word-break: break-word; line-height: 1.2; vertical-align: middle;">
+                                    <t t-esc="o['hcp']"/>
+                                </td>
+                            </tr>
+                            <tr><td><center><br/></center></td></tr>
+                            <tr>
+                                <td style="background-color:midnightblue; color:white;">
+                                    <center>HOSP ADDR</center>
+                                </td>
+                                <td width="2%">
+                                    <center><br/></center>
+                                </td>
+                                <td style="word-break: break-word; line-height: 1.2; vertical-align: middle;">
+                                    <t t-esc="o['hcp_address']"/>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <br/>
+                                    <br/>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="text-align:center;"><center><h4 style="background-color:steelblue;color:steelblue;font-style:italic;padding:0;margin:0;"> <strong>...we care for life!</strong></h4><h4 style="background-color:steelblue;font-style:italic;padding:0;margin:0;"> <strong>...we care for life!</strong></h4><br/></center></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-back" style="margin-top:30px; letter-spacing:1px; line-height:1.5; font-size:8px;font-family: arial;"> <center>
+                    <table width="80%" style="font-size:8.5px">
+                        <tr><td><br/>
+                            <center><strong>The bearer whose name and photograph appears on this identity card is a beneficiary of AIICO MULTISHIELD's health care programme.<br/><br/> In the case of emergency, please contact <br/><h2 style="padding:0;margin:0;"><strong> AIICO MULTISHIELD LIMITED</strong></h2> 322 Ikorodu Road, Anthony, Lagos <br/>
+                            Hotlines: 0805MSHIELD, (08056744353), 0700AMSHIELD (070026744353)<br/><br/> Email: info@aiicomultishield.com <br/>
+                            Website:www.aiicomultishield.com</strong>
+                            <br/><br/>
+                             <img t-if="company.signature" t-att-src="image_data_uri(company.signature)" style="height: 30px;width: 90px;border-radius: 0px; display: block; margin: 0 auto;"/> <br/>
+                            <strong>Authorized Signature</strong>
+                            </center></td>
+                        </tr>
+                    </table>
+                </center>
+            </div>
+        </div> 
+	</template>
+	
+	<template id="dev_enr_profile_report_template">
+		<t t-call="web.html_container">
+		     <t t-foreach="docs" t-as="o">
+			      <t t-foreach="print_id(o)" t-as="o">
+				       <t t-if="o['has_rep'] == 'yes'">
+							<t t-call="hmo_management.dev_enr_detail_report" />
+						</t>
+				</t>
+        </t>
+		</t>
+
+	</template>  
+</data>
+</odoo>
+

@@ -1,0 +1,66 @@
+<!--Custom report.-->
+<openerp>
+<data>
+<template id="enrollee_list_template">
+    <t t-call="web.html_container">
+            <t t-call="hmo_management.custom_report_external_layout">
+				<t t-foreach="docs" t-as="o">
+				<div class="page">
+					<h3>Active Enrollee List: <span t-esc="context_timestamp(datetime.datetime.now()).strftime('%Y-%m-%d ')"/> </h3>
+					<div class="row">
+						<h3><t t-esc="o['name']"/></h3>
+					</div>
+				
+				
+				 <table class="table table-condensed">
+                        <thead>
+                            <tr>
+                                
+								<th>Serial</th>
+								<th>Code</th>
+                                <th>Surname</th>
+                                <th>First Name</th>
+                                <th>Other Name</th>
+								 <th>Plan</th>
+                            </tr>
+                        </thead>
+						<tbody>
+						<t t-set="i" t-value="0" /> 
+					    
+						 <tr t-foreach="print_capitation(o)" t-as="line">
+								
+						         <td>
+								 <t t-set="i" t-value="i+1"/> 
+								  <span t-esc="i"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['code']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['surname']"/>
+                                </td>
+                                <td>
+                                    <span t-esc="line['firstname']"/>
+                                </td>	
+                                <td>
+                                    <span t-esc="line['othername']"/>
+                                </td>
+								<td>
+                                    <span t-esc="line['name']"/>
+                                </td>
+								
+								
+                         </tr>
+						
+						Total Enrollees:<t t-esc="i" />.     
+						 <br/>
+                        </tbody>
+				 </table>
+                </div>
+            </t>
+        </t>
+    </t>
+			
+</template>
+</data>
+</openerp>

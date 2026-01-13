@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <record id="view_encounter_list" model="ir.ui.view">
+        <field name="name">encounter.list</field>
+        <field name="model">encounter</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+           <list string="Encounters">
+                <field name="encounter_date" />                         
+                <field name="hcp"  />
+				<field name="enrollee" />
+				<field name="user_id" />
+				<field name="diagnosis_detail" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_encounter_form" model="ir.ui.view">
+        <field name="name">encounter.form</field>
+        <field name="model">encounter</field>
+        <field name="arch" type="xml">
+		
+			<form string="Encounters">
+				<group>
+                <field name="encounter_date" />        
+                <field name="hcp" select="1" options="{'no_create': True}"/>
+                <field name="enrollee" options="{'no_create': True}" />
+                 <field name="employer" options="{'no_create': True}"/>
+				<field name="user_id" domain="[('id','=',uid)]" options="{'no_create': True}"/>
+				  <field name="diagnosis" />
+				  <field name="diagnosis_detail" />
+				  <field name="investigation" />
+				  <field name="treatment" />
+				  <field name="result" />
+                <field name="comment" />   
+	
+			</group>
+			</form>
+		
+        </field>
+    </record>
+	
+	<record id="encounter_search_view" model="ir.ui.view">
+         <field name="name">encounter</field>
+         <field name="model">encounter</field>
+         <field name="arch" type="xml">
+			<search string="encounter">         
+				<field name="enrollee" />
+                <field name="hcp" />
+
+                <group>
+                    <filter string="HCP" name="hcp" domain="[]" context="{'group_by' : 'hcp'}" />
+                    <filter string="Enrollee" name="enrollee" domain="[]" context="{'group_by' : 'enrollee'}" />
+                </group>
+            </search>
+         </field>
+    </record>
+	
+	<record id = "encounter_action" model = "ir.actions.act_window">
+        <field name = "name">encounter</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">encounter</field>
+        <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "view_encounter_list"/>
+   </record>
+   
+  
+</odoo>

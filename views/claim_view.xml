@@ -1,0 +1,461 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <record id="view_claims_list" model="ir.ui.view">
+        <field name="name">claims.list</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+            <list string="Purchase Order" decoration-info="state in ['draft', 'sent']" decoration-muted="state == 'cancel'" class="o_purchase_order" js_class="purchase_dashboard_list" sample="1">
+					<field name="name" string = "Ref/Auth. Code"/>
+                    <field name="date_order" string="Date"/>
+                    <field name="partner_id" string ="Provider"/>
+					 <field name="nhis_ref" /> 
+                    <field name="enrollee_id"/>
+                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                    <field name="date_planned" invisible="1"/>                 
+                    <field name="provider_total" sum="Total amount" widget="monetary" string="Amount on Bill"/>
+                    <field name="amount_total" sum="Total amount" widget="monetary" string="Amount Vetted"/>
+                    <field name="amount_difference"/>
+                    <field name="state"/>
+                    <field name="invoice_status"/>
+                   <button name="button_confirm" type="object" invisible="state != 'draft'" string="Confirm Claim"/>
+                   <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Claim"  groups="purchase.group_purchase_manager"/>
+             </list>
+        </field>
+    </record>
+
+    <record id="view_claims_form" model="ir.ui.view">
+        <field name="name">claims.form</field>
+        <field name="model">purchase.order</field>
+        <field name="arch" type="xml">
+		
+            <form string="Claims Form">
+                <header>
+                    <button name="action_rfq_send" invisible="state != 'draft'" string="Send Claim/Aut. Code By Email" type="object" context="{'send_rfq':True}" />
+                    <button name="action_rfq_send" invisible="state != 'sent'" string="Re-Send Claim by Email" type="object" context="{'send_rfq':True}"/>
+                    <button name="print_quotation" string="Print Claim" type="object" invisible="state != 'draft'" class="oe_highlight" groups="base.group_user"/>
+                    <button name="print_quotation" string="Re-Print Claim" type="object" invisible="state != 'sent'" groups="base.group_user"/>
+                    <button name="button_draft_claim" type="object" invisible="state != 'draft'" string="Confirm PA Code" id="draft_claim" class="oe_highlight"/>
+					<button name="button_reject" type="object" string="Reject Auth. Request" invisible="state != 'draft'" id="draft_reject" />
+                    <button name="button_confirm" type="object" invisible="state not in ['draft claim','submitted']" string="Confirm Claim" id="draft_confirm" class="oe_highlight"/>
+                    <button name="button_confirm" type="object" invisible="state != 'sent'" string="Confirm Claim" class="oe_highlight" id="bid_confirm"/>
+                    <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Claim" class="oe_highlight" groups="purchase.group_purchase_manager"/>
+                    <button name="action_rfq_send" invisible="state != 'purchase'" string="Send Claim by Email" type="object" context="{'send_rfq':False}"/>
+                    
+                    <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object"/>
+                    <button name="button_cancel" invisible="state not in ['draft','draft claim','to approve','sent','purchase']" string="Cancel" type="object"/>
+                    <button name="button_done" type="object" string="Set to Done" invisible="state not in ['purchase','to approve','cancel']" help="If a Claims Form is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this Claims Form."  groups="purchase.group_purchase_manager"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1"/>
+                </header>
+                <sheet>
+                    
+					<div class="oe_button_box" name="button_box">
+                        <button type="object"  name="action_view_invoice"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o" invisible="invoice_count == 0 or state in ['draft','sent','to approve']">
+                            <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
+                            <field name='invoice_ids' invisible="1"/>
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <span class="o_form_label" invisible="state not in ['draft','sento']">Pre Auth/Draft Claim </span>
+						<span class="o_form_label" invisible="state not in ['draft claim','sent']">Draft Claim </span>
+						<span class="o_form_label" invisible="state not in ['to approve','sent2']">Vetted Claim </span>
+                        <span class="o_form_label" invisible="state not in ['purchase','done']">Approved Claim </span>
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                           <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" domain="[('hcp','=',True)]" string = "HCP"  options="{'no_create': True,'no_create_edit':True}"/>   
+						    <field name="nhis_ref" invisible="not is_nhis"/> 
+                            <field name="enrollee_id" required="1" domain="['|',('active','=',True),('active','=',False)]" options="{'no_create': True,'no_create_edit':True}"  context="{'active_test':False}"/>
+							<field name="claim_reg_id" domain="[('hcp_id','=',partner_id)]" options="{'no_create': True, 'no_create_edit':True}"/>
+							<field name="analytic_id" required="1"/>
+							<field name="primary_provider_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" domain="[('hcp','=',True)]" readonly="state not in ['draft','draft claim']" string="Primary Provider"/>                     
+							<field name="is_nhis"/>
+							<field name="audit_check" invisible="state != 'purchase'"/> 
+							<field name="audit_check_readonly" invisible="not audit_check"/>
+							<field name="currency_id" groups="base.group_multi_currency"/>
+							 <field name="id" invisible="1"/>
+                            <field name="company_id" invisible="1"/>
+                            <field name="currency_id" invisible="1" />
+                        </group>
+                        <group>
+                            <field name="date_order" string="Date of Encounter"/>
+                            <field name="admission_date"/>
+							<field name="discharge_date"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+							<field name="claim_type" required="1"/>  
+							<field name="plan_id"/>
+							<field name="expiry" readonly="1"/>  
+							
+							<field name="nhis" invisible="1"/>  
+							
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Details" invisible="state == 'draft'">
+                            <field name="order_line" invisible="state == 'draft'" readonly="state in ['done','purchase','cancel']">
+                                <list string="Purchase Order Lines" editable="bottom">
+									 <control>
+                                        <create name="add_product_control" string="Add a product"/>
+                                        <create name="add_section_control" string="Add a section" context="{'default_display_type': 'line_section'}"/>
+                                        <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
+                                    </control>
+									
+								    <field name="date_planned" invisible="1"/>
+									 <field name="display_type" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+									 <field name="_domain_product_ids" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="product_type" invisible="1"/>
+                                    <field name="product_uom_id" invisible="1" groups="!uom.group_uom"/>
+                                    <field name="invoice_lines" invisible="1"/>
+									
+                                    <field name="product_id" context="{'partner_id': parent.partner_id}" string= "Item" options="{'no_create': True,'no_create_edit':True}"/>
+                                    <field name="name"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                             <!--       <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting" invisible="1"/> -->
+                                    <field name="product_qty"/>
+                                    <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
+                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
+                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    <field name="price_unit"/>
+                                    <field name="provider_price" string="Amount Requested"/>
+                                    <field name="price_subtotal" widget="monetary" string="Amount Vetted"/>
+                                    <field name="pricing_difference"/>
+                                </list>
+                                <form string="Claims Line">
+                                    <sheet>
+                                        <group>
+                                            <group>
+												<field name="date_planned" invisible="1"/>
+									 <field name="display_type" invisible="1"/>
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="state" invisible="1"/>
+                                    <field name="product_type" invisible="1"/>
+                                    <field name="product_uom_id" invisible="1" groups="!uom.group_uom"/>
+                                    <field name="invoice_lines" invisible="1"/>
+                                                <field name="product_id" context="{'partner_id': parent.partner_id}"/>
+                                                <label for="product_qty"/>
+                                                <div>
+                                                    <field name="product_qty" class="oe_inline"/>
+                                                    <span class="oe_inline"> </span>
+                                                    <field name="product_uom_id" groups="product.group_uom" class="oe_inline"/>
+                                                </div>
+                                                <field name="price_unit"/>
+                                            </group>
+                                            <group>                                           
+                                              <!--  <field name="account_analytic_id" colspan="2" groups="purchase.group_analytic_accounting"/> -->
+                                                <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                            </group>
+                                        </group>
+                                        <notebook>
+                                        <page string="Notes">
+                                            <field name="name"/>
+                                        </page>
+										<page string="Invoices and Incoming Shipments">
+                                            <field name="invoice_lines"/>
+                                        </page>
+                                        </notebook>
+                                    </sheet>
+                                </form>
+                            </field>
+                            <group class="oe_subtotal_footer oe_right">
+                                <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                <div class="oe_subtotal_footer_separator oe_inline">
+                                    <label for="provider_total" string="Amount Requested"/>
+                                </div>
+								<field name="provider_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+								<field name="amount_total"  widget="monetary"   options="{'currency_field': 'currency_id'}" string="Amount Vetted"/>
+								<field name="amount_difference"  widget="monetary"   options="{'currency_field': 'currency_id'}"/>
+                            </group>
+                            <!-- REMOVED: notes field - use chatter instead -->
+                            <div class="oe_clear"/>
+                        </page>
+                         <page string="Other Information" name="purchase_delivery_invoice" invisible="1">
+                            <group>
+                                <group name="other_info">
+                                    <field name="user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
+                                    <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                                    <field name="origin"/>
+                                </group>
+                                <group name="invoice_info">
+                                    <field name="invoice_status" invisible="state in ['draft','sent','to approve','cancel']"/>
+                                    <field name="payment_term_id" readonly="invoice_status == 'invoiced' or state == 'done'" options="{'no_create': True,'no_create_edit':True}"/>
+                                    <field name="fiscal_position_id" options="{'no_create': True}" readonly="invoice_status == 'invoiced' or state == 'done'"/>
+                                </group>
+                            </group>
+                        </page>
+						<page string="Diagnosis &amp; Investigations">
+                            <field name="diagnosis_lines">
+								<list string="Investigations" editable="bottom">
+                                    <field name="name"/>
+									<field name="icd_id"  options="{'no_create': True,'no_create_edit':True}" string = "Classification" domain="[('active','=',True)]"/>
+									<field name="diagnosis" />
+									<field name="details"/>
+                                   
+                                </list>
+			               </field>
+						    <!-- REMOVED: notes field - use chatter instead -->
+                        </page>
+						<page string="Miscellaneous" invisible="state == 'draft'">
+							<group>
+								<field name="override"/>
+							</group>	
+                       </page>
+                    </notebook>
+                </sheet>
+               <!-- CHATTER - Use this for notes and comments instead -->
+               <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+		
+        </field>
+    </record>
+	
+	<record id = "claims_list_view" model = "ir.actions.act_window">
+        <field name = "name">Claims</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+       
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "claims_to_approve_action" model = "ir.actions.act_window">
+        <field name = "name">Claims To Approve</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+       
+        <field name = "view_mode">list,form</field>
+		<field name = "domain">[('state','in',['sent','to approve','bid','cancel' ]),('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "draft_claims_action" model = "ir.actions.act_window">
+        <field name = "name">Draft Claims</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+       
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('state','in',['draft claim']),('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "pre_auth_claims_action" model = "ir.actions.act_window">
+        <field name = "name">Pre Authorization</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('state','in',['draft']),('claim_type','in',['claim','refund']),('api_ref','=',False)]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "pre_auth_claims_action_request" model = "ir.actions.act_window">
+        <field name = "name">Authorization Request</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('state','in',['draft']),('claim_type','in',['claim','refund']),('api_ref','!=',False)]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "pre_auth_claims_action_reject" model = "ir.actions.act_window">
+        <field name = "name">Rejected Authorization Requests</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('state','in',['auth reject']),('claim_type','in',['claim','refund']),('api_ref','!=',False)]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+    <record id = "submitted_claims_action" model = "ir.actions.act_window">
+        <field name = "name">Submitted Claims</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+       
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[ ('state','in',['submitted']),('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "claims_processed_action" model = "ir.actions.act_window">
+        <field name = "name">Processed Claims</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+       
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('state','in',['purchase']),('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+   
+   <record id = "claims_store_action" model = "ir.actions.act_window">
+        <field name = "name">Approved Store Claims</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">purchase.order</field>
+       
+        <field name = "view_mode">list,form</field>
+		<field name="domain">[('state','in',['done']),('claim_type','in',['claim','refund'])]</field>
+        <field name = "view_id" ref= "view_claims_list"/>
+   </record>
+      
+   <record id="view_invoice_form_inherit" model="ir.ui.view">
+        	<field name="name">In Invoice</field>
+        	<field name="model">account.move</field>
+        	<field name="inherit_id" ref="account.view_move_form"/>
+        	<field name="arch" type="xml">
+				
+				<xpath expr="/form/sheet/notebook/page/field[@name='invoice_line_ids']/list/field[@name='account_id']" position="before">
+					<field name="line_date"/>
+				</xpath>
+				
+		</field>
+	</record>
+	
+	
+	
+	<record id="action_HCPs" model="ir.actions.act_window">
+            <field name="name">Providers</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">res.partner</field>
+            
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('hcp', '=', True)]</field>
+			 <field name="context">{'default_supplier_rank':1, 'default_hcp':True}</field>
+    </record>
+
+    
+	 <record id="product_drugs_action" model="ir.actions.act_window">
+            <field name="name">Product Variants</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.product</field>
+            <field name="view_mode">list,form,kanban,activity</field>
+            
+            <field name="search_view_id" ref="product.product_search_form_view"/>
+            <field name="view_id" eval="False"/> <!-- Force empty -->
+            <field name="help" type="html">
+			<field name="domain">[('is_drug', '=', True)]</field>
+              <p class="o_view_nocontent_smiling_face">
+                Create a new product variant
+              </p><p>
+                You must define a product for everything you purchase,
+                whether it's a physical product, a consumable or services.
+              </p>
+            </field>
+        </record>
+	
+	 <record id="action_claims_invoice_pending" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.move</field>
+        
+        <field name="view_mode">list,kanban,form,calendar,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('type','=','in_invoice'),('partner_id.hcp','=',True),]</field>
+        <field name="context">{'default_type':'in_invoice', 'type':'in_invoice', 'journal_type': 'purchase'}</field>
+        <field name="search_view_id" ref="account.view_account_move_filter"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a vendor bill
+          </p><p>
+            Use this menu to control the invoices to be received from your
+            vendors. When registering a new bill, set the purchase order
+            and Odoo will fill the bill automatically according to ordered
+            or received quantities.
+          </p>
+        </field>
+    </record>
+   
+   <record id="check_claim_view" model="ir.ui.view">
+            <field name="name">Check Claims by Audit</field>
+            <field name="model">audit.claim</field>
+            <field name="arch" type="xml">
+                <form string="Check Claims by Audit">
+                    
+                    <span class="o_form_label">All selected claims will be marked as checked by Audit.</span>
+                    <footer>
+                        <button string="Approve" name="validate_move" type="object" default_focus="1" class="btn-primary" data-hotkey="q"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_check_claims" model="ir.actions.act_window">
+            <field name="name">Audit Check</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">audit.claim</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="check_claim_view"/>
+            <field name="context">{}</field>
+            <field name="target">new</field>
+            <field name="help">This wizard will mark all claims selected as checked by Audit.</field>
+        <!--    <field name="groups_id" eval="[(4, ref('__export__.res_groups_87_ceaceba1'))]"/>  -->
+            <field name="binding_model_id" ref="purchase.model_purchase_order" />
+            <field name="binding_view_types">list</field>
+        </record>
+		
+	
+	<record id="view_sup_invoice_list_inherit" model="ir.ui.view">	
+        	<field name="name">Invoice NHIS Ref View</field>
+        	<field name="model">account.move</field>
+        	<field name="inherit_id" ref="account.view_invoice_tree"/>
+        	<field name="arch" type="xml">
+            	<field name="invoice_partner_display_name" position="after">                		
+						 <field name="nhis_ref" /> 
+            	</field>
+		    </field>
+	</record>
+	
+	<record id="purchase_view_purchase_order_filter" model="ir.ui.view">
+        <field name="name">purchase.order.select</field>
+        <field name="model">purchase.order</field>
+        <field name="priority" eval="15"/>
+        <field name="arch" type="xml">
+            <search string="Search Purchase Order">
+                <field name="enrollee_id"/>
+                <field name="name" string="Order"
+                    filter_domain="['|', '|', ('name', 'ilike', self), ('partner_ref', 'ilike', self), ('partner_id', 'child_of', self)]"/>
+                <field name="partner_id" operator="child_of"/>
+                <field name="user_id"/>
+                <field name="product_id"/>
+                <field name="origin"/>
+                <filter name="my_purchases" string="My Purchases" domain="[('user_id', '=', uid)]"/>
+                <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
+                <separator/>
+                <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
+                <separator/>
+                <filter name="approved" string="Approved Claims" domain="[('state', 'in', ('purchase', 'done'))]"/>
+                <filter name="to_approve" string="To Approve" domain="[('state', '=', 'to approve')]"/>
+                <separator/>
+                <filter name="order_date" string="Claim Date" date="date_order"/>
+                <filter name="draft_rfqs" string="Draft RFQs" domain="[('state', '=', 'draft')]"/>
+                <filter name="waiting_rfqs" string="Waiting RFQs" domain="[('state', '=', 'sent')]"/>
+                <filter name="late_rfqs" string="Late RFQs" domain="[('state', 'in', ['draft', 'sent', 'to approve'])]"/>
+                <separator/>
+                <filter invisible="1" string="Late Activities" name="activities_overdue"
+                    domain="[('my_activity_date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                    help="Show all records which has next action date is before today"/>
+                <filter invisible="1" string="Today Activities" name="activities_today"
+                    domain="[('my_activity_date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                    domain="[('my_activity_date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter string="Warnings" name="activities_exception"
+                    domain="[('activity_exception_decoration', '!=', False)]"/>
+                <separator/>
+                <group>
+                    <filter string="Vendor" name="vendor" domain="[]" context="{'group_by': 'partner_id'}"/>
+                    <filter string="Purchase Representative" name="representative" domain="[]" context="{'group_by': 'user_id'}"/>
+                    <filter string="Order Date" name="order_date_group" domain="[]" context="{'group_by': 'date_order'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+</odoo>

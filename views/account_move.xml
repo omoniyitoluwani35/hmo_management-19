@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+      
+   <record id="view_invoice_form_inherit" model="ir.ui.view">
+        	<field name="name">In Invoice</field>
+        	<field name="model">account.move</field>
+        	<field name="inherit_id" ref="account.view_move_form"/>
+        	<field name="arch" type="xml">
+				<xpath expr="//field[@name='invoice_vendor_bill_id']" position="after">
+					<field name="partner_id_category" invisible="1"/>
+					<field name="enrollee_id" invisible="partner_id_category != 'refund'"/> 
+				</xpath>
+				<xpath expr="/form/sheet/notebook/page/field[@name='invoice_line_ids']/list/field[@name='account_id']" position="before">
+					<field name="enrollee_id"/>
+					<field name="line_date"/>
+				</xpath>
+				<xpath expr="//field[@name='date']" position="after">
+					<field name="line_account_id" readonly="state != 'draft'" />
+				</xpath>
+				<xpath expr="//header/button[@name='action_post'][2]" position="replace">
+					<button name="action_post" string="Confirm" class="oe_highlight" type="object" groups="account.group_account_user" data-hotkey="v" context="{'validate_analytic': True}" invisible="hide_post_button or move_type == 'entry' or display_inactive_currency_warning"/>
+			</xpath>
+				
+				  
+		</field>
+	</record>
+	
+	 <record id="action_claims_invoice_pending" model="ir.actions.act_window">
+        <field name="name">Vendor Bills</field>
+        <field name="res_model">account.move</field>
+        
+        <field name="view_mode">list,kanban,form,pivot,graph</field>
+        <field eval="False" name="view_id"/>
+        <field name="domain">[('move_type','=','in_invoice'),('partner_id.hcp','=',True),]</field>
+        <field name="context">{'default_move_type':'in_invoice', 'move_type':'in_invoice', 'journal_type': 'purchase'}</field>
+        <field name="search_view_id" ref="account.view_account_move_filter"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create a vendor bill
+          </p><p>
+            Use this menu to control the invoices to be received from your
+            vendors. When registering a new bill, set the purchase order
+            and Odoo will fill the bill automatically according to ordered
+            or received quantities.
+          </p>
+        </field>
+    </record>
+
+	
+	<record id="view_sup_invoice_list_inherit" model="ir.ui.view">	
+        	<field name="name">Invoice NHIS Ref View</field>
+        	<field name="model">account.move</field>
+        	<field name="inherit_id" ref="account.view_invoice_tree"/>
+        	<field name="arch" type="xml">
+				<xpath expr="//field[@name='invoice_partner_display_name']" position="after">
+					<field name="nhis_ref" /> 
+				</xpath>
+				
+		    </field>
+	</record>
+
+   
+</odoo>

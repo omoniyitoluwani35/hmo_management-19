@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="enrollee_operations_view" model="ir.ui.view">
+         <field name="name">Enrollee Operations</field>
+         <field name="model">enrollee.operations</field>
+         <field name="arch" type="xml">
+             <form string="Enrollee Operations">
+                   <separator colspan="4" string="Perform multiple enrollee operations"/>
+				   <group>
+						<field name="action" />
+				   </group>
+				    <group>
+
+						<field name="customer_id" invisible="action not in ['plan','status','employer_capitation']"/>
+						<field name="plan_id" invisible="action not in ['plan','capitation']"/>
+						<field name="active" invisible="action != 'status'"/>
+						<field name="cap_activate" invisible="action not in ['capitation','employer_capitation']"/>
+						<field name="caps_amount" invisible="action != 'cap_amount'"/>
+				   </group>
+                   <footer>
+				     <button name="enrollee_operations" string="Perform Operation" type="object" class="oe_highlight" help="Perform any of several operations on"/>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+    </record>
+	
+	
+	
+	<record id="action_view_enrollee_wizard" model="ir.actions.act_window">
+            <field name="name">Enrollee Operations</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">enrollee.operations</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="enrollee_operations_view"/>
+            <field name="target">new</field>
+    </record>
+    
+	
+	
+</odoo>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+	<report id="cap_alone_report_print_id"
+                    model="res.partner"
+                    string="Print Capitation List (Strict)"
+                    report_type="qweb-pdf"
+                    name="hmo_management.cap_alone_report_template"  
+                    file="hmo_management.cap_alone_report_template"
+					print_report_name="'Capitation List (Strict) - %s' % (object.name)"
+                    >
+    </report>
+	
+	<report id="enrollee_list_full_report_print_id"
+                    model="res.partner"
+                    string="Print Enrollee List (with coverage)"
+                    report_type="qweb-pdf"
+                    name="hmo_management.enrollee_list_coverage_template"  
+                    file="hmo_management.enrollee_list_coverage_template"
+					print_report_name="'Enrollee List (Coverage) - %s' % (object.name)"
+                    >
+    </report>
+	
+	<report id="enrollee_list_report_print_id"
+                    model="res.partner"
+                    string="Print Enrolle List"
+                    report_type="qweb-pdf"
+                    name="hmo_management.enrollee_list_template"  
+                    file="hmo_management.enrollee_list_template"
+					print_report_name="'Enrollee List - %s' % (object.name)"
+                    >
+    </report>
+</data>
+</openerp>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	
+	 <record id="create_capitation_view" model="ir.ui.view">
+         <field name="name">Create capitation</field>
+         <field name="model">create.capitation</field>
+         <field name="arch" type="xml">
+             <form string="Create capitation">
+                   <separator colspan="4" string="Create customer capitation"/>
+				  
+                   <footer>
+				     <button name="generate_capitation" string="Create additional capitation entries" type="object" class="oe_highlight"/>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+    </record>
+	
+	<record id="action_view_wizard" model="ir.actions.act_window">
+            <field name="name">Create capitation</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">create.capitation</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="create_capitation_view"/>
+            <field name="target">new</field>
+    </record>
+	
+	
+		
+	<act_window id="create_capitation" name="Create Additional Capitation" res_model="create.capitation" binding_model="enrollee" view_mode="form" target="new" />
+	
+</odoo>

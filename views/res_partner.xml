@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+	 
+		 <record id="view_order_form_inherit" model="ir.ui.view">
+        	<field name="name">Partner</field>
+        	<field name="model">res.partner</field>
+        	<field name="inherit_id" ref="base.view_partner_form"/>
+        	<field name="arch" type="xml">
+            	<xpath expr="//group[@name='purchase']" position="inside">	
+						<field name ="supplier_rank" invisible="1"/>
+                		<field name="hcp" invisible="supplier_rank &lt; 1"/>
+					    <field name="nhis" invisible="supplier_rank &lt; 1"/>
+						<field name="capitated" invisible="supplier_rank &lt; 1"/>
+						<field name="cap_amount" invisible="not capitated"/>
+						<field name="nhis_cap_amount" invisible="supplier_rank &lt; 1"/>
+            	</xpath>
+        	                 
+				<xpath expr="//div[@name='button_box']" position="inside">	
+					 <button name="action_view_analytics"
+                            type="object"
+                            class="oe_stat_button"
+                            icon="fa-pencil-square-o">
+                            <field name="analytic_count" widget="statinfo" string="Analytic Account"/>
+                        </button>
+				</xpath>
+        	                 
+        		 <xpath expr="//field[@name='vat']" position="after">	
+					<field name ="customer_rank" invisible="1"/>
+                	<field name="nhis_ref" invisible="supplier_rank &lt; 1"/>
+					<field name="id" invisible="customer_rank &lt; 1" readonly="1"/>
+					<field name="x_m_id" invisible="customer_rank != 1" string="Old ID" readonly="1"/>
+            	</xpath>
+				
+				<xpath expr="//field[@name='property_product_pricelist']" position="after">	
+					 <field name="tariff_id" />
+				</xpath>
+		
+		</field>
+</record>
+</odoo>

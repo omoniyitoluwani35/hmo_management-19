@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tariff_form_view" model="ir.ui.view">
+         <field name="name">Tariffs</field>
+         <field name="model">tariff</field>
+         <field name="arch" type="xml">
+             <form string="Tariff">
+			 <header>
+				 <button name="action_confirm" invisible="state != 'draft'" string="Confirm Tariff"  class="oe_highlight" type="object"  />
+				 <button name="action_draft" invisible="state != 'confirm'" string="Reset to Draft" type="object" />
+				 <field name="state" widget="statusbar" statusbar_visible="draft,confirm" />
+			 </header>
+			 <sheet>
+                   <group>
+                        <group string="Tariff">
+                            <field name="name" readonly="state != 'draft'"/>
+                            <field name="code" readonly="state != 'draft'"/>
+                            <field name="active" readonly="state != 'draft'" />
+                            <field name="tariff_line" readonly="state != 'draft'"/>
+                        </group>
+                    </group>
+					</sheet>
+             </form>
+         </field>
+    </record>
+	
+	 <record id="tariff_list_view" model="ir.ui.view">
+         <field name="name">Tariffs</field>
+         <field name="model">tariff</field>
+         <field name="arch" type="xml">
+             <list string="Tariff">
+                  
+                            <field name="name"/>
+                            <field name="code"/>
+							<field name="state"/>
+                
+             </list>
+         </field>
+    </record>
+	
+	 <record id="tariff_line_list_view" model="ir.ui.view">
+         <field name="name">Tariff Lines</field>
+         <field name="model">tariff.lines</field>
+         <field name="arch" type="xml">
+             <list string="Tariff">
+                    <field name="product_id" />
+                    <field name="name"/>
+                    <field name="price"/>
+             </list>
+         </field>
+    </record>
+	
+	<record id = "tariff_action" model = "ir.actions.act_window">
+        <field name = "name">Tariffs</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">tariff</field>
+        <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "tariff_list_view"/>
+   </record>
+</odoo>

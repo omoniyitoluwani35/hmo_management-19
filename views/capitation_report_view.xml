@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <record id="view_capitation_report_list" model="ir.ui.view">
+        <field name="name">capitation_report.list</field>
+        <field name="model">capitation.report</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+           <list string="Capitation Reports">
+                <field name="capitation_date" />                         
+                <field name="hcp"  />
+				<field name="employer"/>
+				<field name="enrollee_code" />
+				<field name="surname" />
+				<field name="firstname" />
+				<field name="plan" />
+				<field name="amount" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_capitation_report_form" model="ir.ui.view">
+        <field name="name">capitation_report.form</field>
+        <field name="model">capitation.report</field>
+        <field name="arch" type="xml">
+		
+			<form string="Capitation Reports">
+				<group>
+                <field name="capitation_date" />        
+                <field name="hcp"/>
+				<field name="employer"/>
+               <field name="enrollee_code" />
+				<field name="surname" />
+				<field name="firstname" />
+                <field name="plan" />
+				<field name="amount" />	
+			</group>
+			</form>
+		
+        </field>
+    </record>
+	
+	<record id="capitation_report_search_view" model="ir.ui.view">
+         <field name="name">capitation_report</field>
+         <field name="model">capitation.report</field>
+         <field name="arch" type="xml">
+			<search string="Capitation Reports">         
+				<field name="enrollee_code" />
+                <field name="hcp" />
+				<field name="plan" />
+                <group>
+                    <filter string="HCP" name="hcp" domain="[]" context="{'group_by' : 'hcp'}" />
+					<filter string="Employer" name="employer" domain="[]" context="{'group_by' : 'employer'}" />
+                    <filter string="Enrollee" name="enrollee" domain="[]" context="{'group_by' : 'enrollee_code'}" />
+					<filter string="Plan" name="plan" domain="[]" context="{'group_by' : 'plan'}" />
+					<filter string="Date" name="capitation_date" domain="[]" context="{'group_by' : 'capitation_date'}" />
+                </group>
+            </search>
+         </field>
+    </record>
+	
+	<record id = "capitation_report_action" model = "ir.actions.act_window">
+        <field name = "name">Capitation Reports</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">capitation.report</field>
+     <field name = "view_mode">list,form</field>
+        <field name = "view_id" ref= "view_capitation_report_list"/>
+   </record>
+</odoo>

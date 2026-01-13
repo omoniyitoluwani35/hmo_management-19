@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	 <record id="view_enrollee_list" model="ir.ui.view">
+        <field name="name">enrollee.list</field>
+        <field name="model">enrollee</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <list string="Enrollee">
+                <field name="surname" string="Surname"/>
+                <field name="firstname"/>
+                <field name="code" string="ID Number" />
+                <field name="employer" />
+                <field name="hcp" />
+                <field name="plan" />
+                <field name="state" />
+                <field name="end_date" widget="date" />
+				<field name="dependents" optional="hide" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_enrollee_form" model="ir.ui.view">
+        <field name="name">enrollee.form</field>
+        <field name="model">enrollee</field>
+        <field name="arch" type="xml">
+		
+            <form string="Enrollee">
+                <group col="3" colspan="3">
+				  	<group>
+						<field name="surname" required="1"/>
+						<field name="firstname" required="1"/>
+						<field name="othername"/>
+						<field name="code" string="ID Number" required="1"/>
+						<field name="active"/>
+					</group>
+					<group>
+						<field name="plan" required="1" options="{'no_create': True}"/>
+						<field name="hcp" options="{'no_create': True}"/>
+						<field name="employer" required="1" options="{'no_create': True}"/>
+						<field name="uncapitated"/>
+						<field name="enforce" groups="purchase.group_purchase_manager"/> 
+					</group>
+					<group>
+						<field name="start_date"/>
+						<field name="end_date"/>
+						<field name="policy_start_date"/> 
+						<field name="policy_cycle_date"/>
+						<field name="ref"/>
+					</group>
+				</group>
+				
+                <notebook colspan="4">
+                    <page string="General">                        
+                       <group col="4" colspan="4">
+                            <group col="4" colspan="2">
+                                <separator colspan="4" string="Personal Details"/>
+                                <field name="dob" />
+								<field name="address" />
+								<field name="country"/>
+								<field name="state" required="1" />
+								<field name="lga"/>
+								<field name="town"/>
+                                <field name="email" widget="email"/>
+                                <field name="phone"/>
+								<field name="gender" required="1" />
+								<field name="marital" required="1" />
+								<field name="occupation"/>
+								<field name="password"/>
+                            </group>
+                            <group col="2" colspan="1">
+                                <separator colspan="4" string="Photo"/>
+                                <group colspan="1">
+									<field name="picture" nolabel="1" widget="image"/>
+                                </group>
+                            </group>
+                       </group> 
+                    </page>
+                    <page string="Cover Details">
+						<group> 
+							<group>
+								<field name="coverage" required="1"  string="Coverage"/>
+								<field name="type" required="1" />
+								<field name="dependent1" />
+								<field name="dependent2" />
+								<field name="dependent3" />
+								<field name="dependent4" />
+								<field name="dependent5" />
+							</group>
+							<group>
+								<field name="extra1" />
+								<field name="extra2" />
+								<field name="extra3" />
+								<field name="extra4" />
+								<field name="extra5" />
+							</group>
+							<group>
+								<field name="principal_id" readonly="1" force_save="1" />
+							</group>
+						</group>
+                    </page>
+                    <page string="Medical Notes">
+						<group>
+							<group>
+								<field name="bloodgroup"/> 
+								<field name="genotype"/>
+							</group>
+							<group>    
+								<field name="comment" string="Comments"/>
+							</group>
+						</group>
+                    </page>
+					<page string="Medical History">
+						<field name="treatment_lines">
+							<list>
+								<field name="product_id" />
+								<field name="name"/>
+								<field name="product_qty"/>
+								<field name="product_uom_id" groups="product.group_uom"/>
+								<field name="price_unit"/>
+								<field name="provider_price" string="Amount Requested"/>
+								<field name="price_subtotal" widget="monetary" string="Amount Vetted"/>
+								<field name="pricing_difference"/>
+							</list>
+						</field>
+                    </page>
+                </notebook>
+            </form>
+		
+        </field>
+    </record>
+	
+	<record id="enrollee_search_view" model="ir.ui.view">
+         <field name="name">Enrollees</field>
+         <field name="model">enrollee</field>
+         <field name="arch" type="xml">
+			<search string="Search Enrollees">
+                <filter string="Current" icon="terp-check" name="current" domain="['|',('end_date','&gt;=', time.strftime('%Y-%m-%d')),('end_date','=',False)]" help="Cover in progress"/>
+                <filter string="Expired" icon="terp-emblem-important" name="expired" domain="[('end_date','&lt;', time.strftime('%Y-%m-%d'))]" help="Covers whose end date already passed"/>
+				<filter string="Pending" icon="terp-emblem-important" name="pending" domain="['|',('code','=','PENDING'),('code','=','pending')]" help="Covers pending activations"/>
+  
+				<field name="code" string ="Enrollee Code" />
+                <field name="surname" />
+                <field name="firstname" />
+              
+                <field name="employer" />
+                <field name="hcp" />
+                <field name="plan" />
+                <field name="end_date" />
+				 <separator/>
+                <group>
+                    <filter string="HCP" name="hcp" domain="[]" context="{'group_by' : 'hcp'}"/>
+                    <filter string="Employer" name="employer" domain="[]" context="{'group_by' : 'employer'}"/>
+					 <filter string="Plan" name="plan" domain="[]" context="{'group_by' : 'plan'}"/>
+                </group>
+            </search>
+         </field>
+    </record>
+	
+	 <record model="ir.ui.view" id="view_enrollee_pivot">
+            <field name="name">enrollee.pivot</field>
+            <field name="model">enrollee</field>
+            <field name="arch" type="xml">
+                <pivot string="Enrollees">
+                    <field name="hcp" type="row"/>
+                </pivot>
+            </field>
+        </record>
+	
+	<record id = "enrollee_list_view" model = "ir.actions.act_window">
+        <field name = "name">Enrollees</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">enrollee</field>
+        <field name = "view_mode">list,form,pivot</field>
+        <field name = "view_id" ref= "view_enrollee_list"/>
+   </record>
+   
+    <record id="view_lga_list" model="ir.ui.view">
+        <field name="name">lga.list</field>
+        <field name="model">lga</field>
+		<field name="priority">2</field>
+        <field name="arch" type="xml">
+            <list string="LGA">
+                <field name="name"/>
+                <field name="code"  />
+               <field name="state" />
+            </list>
+        </field>
+    </record>
+   
+   <record id = "lga_view" model = "ir.actions.act_window">
+        <field name = "name">LGA</field>
+        <field name = "type">ir.actions.act_window</field>
+        <field name = "res_model">lga</field>
+        <field name = "view_mode">list,form</field>
+   </record>
+</odoo>

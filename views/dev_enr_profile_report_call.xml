@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+	
+	
+<record id="paperformat_enrollee_id_card" model="report.paperformat">
+    <field name="name">ID Card Format</field>
+    <field name="default" eval="True"/>
+    <field name="format">custom</field>
+    <field name="page_height">88</field>
+    <field name="page_width">55</field>
+    <field name="orientation">Landscape</field>
+    <field name="margin_top">1</field>
+    <field name="margin_bottom">1</field>
+    <field name="margin_left">1</field>
+    <field name="margin_right">1</field>
+    <field name="header_line" eval="False"/>
+    <field name="header_spacing">0</field>
+    <field name="dpi">90</field>
+</record>
+
+<report id="dev_enr_report_print_id"
+                    model="enrollee"
+                    string="Print ID Card"
+                    report_type="qweb-pdf"
+                    name="hmo_management.dev_enr_profile_report_template"  
+                    file="hmo_management.dev_enr_profile_report_template"
+					print_report_name="'ID Card - %s _ %s' % (object.surname,object.code)"
+					paperformat="paperformat_enrollee_id_card"
+                    >
+    </report>
+</data>
+</openerp>

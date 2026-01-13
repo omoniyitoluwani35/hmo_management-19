@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="monthly_birthday_reports_view" model="ir.ui.view">
+         <field name="name">Monthly Birthday Reports</field>
+         <field name="model">monthly.birthday.reports</field>
+         <field name="arch" type="xml">
+             <form string="Monthly Birthday Reports">
+                   <separator colspan="4" string="Run monthly birthday reports"/>
+				   <group>
+						<field name="status" />
+						<field name="day_of_month" />
+				   </group>
+				   
+                   <footer>
+				     <button name="monthly_birthday_reports" string="Run Report" type="object" class="oe_highlight"/>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+    </record>
+	
+	
+	
+	<record id="action_view_birthday_wizard" model="ir.actions.act_window">
+            <field name="name">Monthly Birthday Reports</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">monthly.birthday.reports</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="monthly_birthday_reports_view"/>
+            <field name="target">new</field>
+    </record>
+	
+	 <record id="monthly_birthday_xls_output_view" model="ir.ui.view">
+         <field name="name">Monthly Birthday Report Excel Output</field>
+         <field name="model">monthly.birthday.report.output.wizard</field>
+         <field name="arch" type="xml">
+             <form string="Excel Output">
+                   <separator colspan="4" string="Please save file as .xls excel format"/>
+                   <field name="name" invisible="1"/>
+                   <field name="xls_output" filename='name'/>
+                   <footer>
+                       <button string="Cancel" class="oe_link" special="cancel"/>
+                   </footer>
+             </form>
+         </field>
+       </record>	
+</odoo>
