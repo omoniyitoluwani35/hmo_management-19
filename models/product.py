@@ -10,7 +10,7 @@ _logger = getLogger(__name__)
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
-    is_drug = fields.Boolean(string='Is Drug/Service', default = True)
+    is_drug = fields.Boolean(string='Is Drug/Service', default=True)
     cap_amount = fields.Float(string = 'Capitation Amount')
     is_nhis = fields.Boolean(string = 'Is NHIS')
     plan_limit = fields.Float(string = 'Plan Limit')

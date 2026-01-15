@@ -6,10 +6,10 @@
         	<field name="inherit_id" ref="product.product_template_form_view"/>
         	<field name="arch" type="xml">
             	<xpath expr="//div[@name='options']" position="inside">	
-                		 <field name="is_drug" />
+                		 <!-- <field name="is_drug" />
 						 <label for="is_drug"/>
 					     <field name="is_nhis"/>
-						 <label for="is_nhis"/>
+						 <label for="is_nhis"/> -->
             	</xpath> 
 
                 <xpath expr="//group[@name='group_general']" position="inside">	

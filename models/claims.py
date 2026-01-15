@@ -435,7 +435,7 @@ class PurchaseOrderLine(models.Model):
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
                     line.product_id.supplier_taxes_id,
-                    line.taxes_id,
+                    line.tax_ids,
                     line.company_id,
                 )
                 price_unit = line.product_id.currency_id._convert(

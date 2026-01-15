@@ -208,12 +208,15 @@
                        </page>
                     </notebook>
                 </sheet>
+                <page string="Notes">
+                    <field name="notes" placeholder="Add internal notes here..." nolabel="1"/>
+                </page>
                <!-- CHATTER - Use this for notes and comments instead -->
-               <div class="oe_chatter">
+               <!-- <div class="oe_chatter">
                     <field name="message_follower_ids"/>
                     <field name="activity_ids"/>
                     <field name="message_ids"/>
-                </div>
+                </div> -->
             </form>
 		
         </field>

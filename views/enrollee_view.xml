@@ -36,7 +36,7 @@
 					<group>
 						<field name="plan" required="1" options="{'no_create': True}"/>
 						<field name="hcp" options="{'no_create': True}"/>
-						<field name="employer" required="1" options="{'no_create': True}"/>
+						<field name="employer" options="{'no_create': True}"/>
 						<field name="uncapitated"/>
 						<field name="enforce" groups="purchase.group_purchase_manager"/> 
 					</group>
