@@ -30,12 +30,12 @@
 		
             <form string="Claims Form">
                 <header>
-                    <button name="action_rfq_send" invisible="state != 'draft'" string="Send Claim/Aut. Code By Email" type="object" context="{'send_rfq':True}" />
+                    <button name="action_rfq_send" invisible="state != 'draft'" string="Send Claim/Aut. Code By Email" type="object" context="{'send_rfq':True}"/>
                     <button name="action_rfq_send" invisible="state != 'sent'" string="Re-Send Claim by Email" type="object" context="{'send_rfq':True}"/>
                     <button name="print_quotation" string="Print Claim" type="object" invisible="state != 'draft'" class="oe_highlight" groups="base.group_user"/>
                     <button name="print_quotation" string="Re-Print Claim" type="object" invisible="state != 'sent'" groups="base.group_user"/>
                     <button name="button_draft_claim" type="object" invisible="state != 'draft'" string="Confirm PA Code" id="draft_claim" class="oe_highlight"/>
-					<button name="button_reject" type="object" string="Reject Auth. Request" invisible="state != 'draft'" id="draft_reject" />
+					<button name="button_reject" type="object" string="Reject Auth. Request" invisible="state != 'draft'" id="draft_reject"/>
                     <button name="button_confirm" type="object" invisible="state not in ['draft claim','submitted']" string="Confirm Claim" id="draft_confirm" class="oe_highlight"/>
                     <button name="button_confirm" type="object" invisible="state != 'sent'" string="Confirm Claim" class="oe_highlight" id="bid_confirm"/>
                     <button name="button_approve" type="object" invisible="state != 'to approve'" string="Approve Claim" class="oe_highlight" groups="purchase.group_purchase_manager"/>
@@ -43,17 +43,15 @@
                     
                     <button name="button_draft" invisible="state != 'cancel'" string="Set to Draft" type="object"/>
                     <button name="button_cancel" invisible="state not in ['draft','draft claim','to approve','sent','purchase']" string="Cancel" type="object"/>
-                    <button name="button_done" type="object" string="Set to Done" invisible="state not in ['purchase','to approve','cancel']" help="If a Claims Form is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this Claims Form."  groups="purchase.group_purchase_manager"/>
+                    <button name="button_done" type="object" string="Set to Done" invisible="state not in ['purchase','to approve','cancel']" help="If a Claims Form is done, you cannot modify it manually anymore. You will not be able to receive invoices anymore for this Claims Form." groups="purchase.group_purchase_manager"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,sent,purchase,done" readonly="1"/>
                 </header>
                 <sheet>
                     
 					<div class="oe_button_box" name="button_box">
-                        <button type="object"  name="action_view_invoice"
-                            class="oe_stat_button"
-                            icon="fa-pencil-square-o" invisible="invoice_count == 0 or state in ['draft','sent','to approve']">
+                        <button type="object" name="action_view_invoice" class="oe_stat_button" icon="fa-pencil-square-o" invisible="invoice_count == 0 or state in ['draft','sent','to approve']">
                             <field name="invoice_count" widget="statinfo" string="Vendor Bills"/>
-                            <field name='invoice_ids' invisible="1"/>
+                            <field name="invoice_ids" invisible="1"/>
                         </button>
                     </div>
                     <div class="oe_title">
@@ -67,9 +65,9 @@
                     </div>
                     <group>
                         <group>
-                           <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" domain="[('hcp','=',True)]" string = "HCP"  options="{'no_create': True,'no_create_edit':True}"/>   
+                           <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" placeholder="Name, TIN, Email, or Reference" domain="[('hcp','=',True)]" string="HCP" options="{'no_create': True,'no_create_edit':True}"/>   
 						    <field name="nhis_ref" invisible="not is_nhis"/> 
-                            <field name="enrollee_id" required="1" domain="['|',('active','=',True),('active','=',False)]" options="{'no_create': True,'no_create_edit':True}"  context="{'active_test':False}"/>
+                            <field name="enrollee_id" required="1" domain="['|',('active','=',True),('active','=',False)]" options="{'no_create': True,'no_create_edit':True}" context="{'active_test':False}"/>
 							<field name="claim_reg_id" domain="[('hcp_id','=',partner_id)]" options="{'no_create': True, 'no_create_edit':True}"/>
 							<field name="analytic_id" required="1"/>
 							<field name="primary_provider_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}" domain="[('hcp','=',True)]" readonly="state not in ['draft','draft claim']" string="Primary Provider"/>                     
@@ -79,7 +77,7 @@
 							<field name="currency_id" groups="base.group_multi_currency"/>
 							 <field name="id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
-                            <field name="currency_id" invisible="1" />
+                            <field name="currency_id" invisible="1"/>
                         </group>
                         <group>
                             <field name="date_order" string="Date of Encounter"/>
@@ -104,23 +102,14 @@
                                         <create name="add_note_control" string="Add a note" context="{'default_display_type': 'line_note'}"/>
                                     </control>
 									
-								    <field name="date_planned" invisible="1"/>
-									 <field name="display_type" invisible="1"/>
-                                    <field name="currency_id" invisible="1"/>
-									 <field name="_domain_product_ids" invisible="1"/>
-                                    <field name="state" invisible="1"/>
-                                    <field name="product_type" invisible="1"/>
-                                    <field name="product_uom_id" invisible="1" groups="!uom.group_uom"/>
-                                    <field name="invoice_lines" invisible="1"/>
-									
-                                    <field name="product_id" context="{'partner_id': parent.partner_id}" string= "Item" options="{'no_create': True,'no_create_edit':True}"/>
+								    
+									 
+                                    <field name="product_id" context="{'partner_id': parent.partner_id}" string="Item" options="{'no_create': True,'no_create_edit':True}"/>
                                     <field name="name"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
                              <!--       <field name="account_analytic_id" context="{'default_partner_id':parent.partner_id}" groups="purchase.group_analytic_accounting" invisible="1"/> -->
                                     <field name="product_qty"/>
-                                    <field name="qty_received" invisible="not context.get('show_purchase', False)"/>
-                                    <field name="qty_invoiced" invisible="not context.get('show_purchase', False)"/>
-                                    <field name="product_uom_id" groups="product.group_uom"/>
+                                    
                                     <field name="price_unit"/>
                                     <field name="provider_price" string="Amount Requested"/>
                                     <field name="price_subtotal" widget="monetary" string="Amount Vetted"/>
@@ -162,17 +151,16 @@
                                     </sheet>
                                 </form>
                             </field>
-                            <group class="oe_subtotal_footer oe_right">
+                           <group class="oe_subtotal_footer">
                                 <field name="amount_untaxed" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                                 <field name="amount_tax" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-                                <div class="oe_subtotal_footer_separator oe_inline">
-                                    <label for="provider_total" string="Amount Requested"/>
-                                </div>
-								<field name="provider_total" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
-								<field name="amount_total"  widget="monetary"   options="{'currency_field': 'currency_id'}" string="Amount Vetted"/>
-								<field name="amount_difference"  widget="monetary"   options="{'currency_field': 'currency_id'}"/>
+                            
+                                <field name="provider_total" widget="monetary" options="{'currency_field': 'currency_id'}" string="Amount Requested"/>
+                            
+                                <field name="amount_total" widget="monetary" options="{'currency_field': 'currency_id'}" string="Amount Vetted"/>
+                            
+                                <field name="amount_difference" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                             </group>
-                            <!-- REMOVED: notes field - use chatter instead -->
                             <div class="oe_clear"/>
                         </page>
                          <page string="Other Information" name="purchase_delivery_invoice" invisible="1">
@@ -193,13 +181,12 @@
                             <field name="diagnosis_lines">
 								<list string="Investigations" editable="bottom">
                                     <field name="name"/>
-									<field name="icd_id"  options="{'no_create': True,'no_create_edit':True}" string = "Classification" domain="[('active','=',True)]"/>
-									<field name="diagnosis" />
+									<field name="icd_id" options="{'no_create': True,'no_create_edit':True}" string="Classification" domain="[('active','=',True)]"/>
+									<field name="diagnosis"/>
 									<field name="details"/>
                                    
                                 </list>
 			               </field>
-						    <!-- REMOVED: notes field - use chatter instead -->
                         </page>
 						<page string="Miscellaneous" invisible="state == 'draft'">
 							<group>
@@ -207,18 +194,9 @@
 							</group>	
                        </page>
                     </notebook>
+                    <chatter/>
                 </sheet>
-                <page string="Notes">
-                    <field name="notes" placeholder="Add internal notes here..." nolabel="1"/>
-                </page>
-               <!-- CHATTER - Use this for notes and comments instead -->
-               <!-- <div class="oe_chatter">
-                    <field name="message_follower_ids"/>
-                    <field name="activity_ids"/>
-                    <field name="message_ids"/>
-                </div> -->
             </form>
-		
         </field>
     </record>
 	
