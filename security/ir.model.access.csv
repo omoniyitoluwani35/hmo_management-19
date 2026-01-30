@@ -27,6 +27,9 @@ access_claims,Claims Actuary Access,hmo_management.model_purchase_order,hmo_mana
 access_claims_lines,Claims Lines Actuary Access,hmo_management.model_purchase_order_line,hmo_management.group_actuary,1,0,0,0
 access_diagnosis,Diagnosis Management,hmo_management.model_claims_diagnosis,hmo_management.group_actuary,1,0,0,0
 access_claims_reg,Claims Registration,hmo_management.model_claims_registration,hmo_management.group_actuary,1,0,0,0
+access_employer_lines_user,access.employer.lines.user,model_employer_lines,base.group_user,1,1,1,1
+access_employer_lines_manager,access.employer.lines.manager,model_employer_lines,base.group_system,1,1,1,1
+access_employer_lines_public,access.employer.lines.public,model_employer_lines,base.group_public,1,0,0,0
 icd,ICD,hmo_management.model_icd,hmo_management.group_enrollee_operations,1,1,1,1
 lga,LGA,hmo_management.model_lga,hmo_management.group_enrollee_operations,1,0,0,0
 lga_it,LGA IT,hmo_management.model_lga,hmo_management.group_enrollee_admin,1,1,1,1

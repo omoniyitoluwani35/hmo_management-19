@@ -6,7 +6,7 @@
     "version": "19.0.1.0.1",
     "category": "Purchases",
     "website": "",
-    "author": "MOdel Caarbon",
+    "author": "Model Caarbon",
     "license": "AGPL-3",
     "depends": [
         "base",

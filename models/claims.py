@@ -39,6 +39,7 @@ class PurchaseOrder(models.Model):
     primary_provider_id = fields.Many2one('res.partner', string='Secondary Provider',domain=['&',('supplier','=',True),('hcp','=',True)])
     claim_type = fields.Selection([('claim', 'Claim'), ('refund','Refund')], string='Claim Type')
     expiry = fields.Char (string = 'Days to coverage expiry')
+    amount_total = fields.Monetary(string='Total', store=True, readonly=True, compute='_amount_all')
     provider_total = fields.Monetary(string = 'Provider Total')
     x_m_id = fields.Integer(string="Migration_ID")
     state = fields.Selection([
@@ -78,23 +79,23 @@ class PurchaseOrder(models.Model):
             order.invoice_count = len(invoices)
             
     #@api.depends('order_line.invoice_lines.move_id')
-    def _compute_invoice_manual(self):
-        #for order in self: 
-        orders = self.env['purchase.order'].search([('invoice_count','=',False)])
-        raise UserError(_("%s") % len(orders))
-        for order in orders: #if self.invoice_count == 0 or self.invoice_count == False:
-            invoices = []
-            for line in order.order_line:
-                #raise UserError("Holl1")
-                invoice_lines = self.env['account.move.line'].search([('purchase_line_id','=',line.id)])
-                if invoice_lines:
-                    raise UserError("Holla2")
-                for invoice_line in invoice_lines:
-                    invoice = self.env['account.move'].search([('id','=',invoice_line.move_id)])
-                    #raise UserError("Holla")
-                    invoices.append(invoice)
-            order.invoice_count = len(invoices)
-            order.invoice_ids = invoices
+    # def _compute_invoice_manual(self):
+    #     #for order in self: 
+    #     orders = self.env['purchase.order'].search([('invoice_count','=',False)])
+    #     raise UserError(_("%s") % len(orders))
+    #     for order in orders: #if self.invoice_count == 0 or self.invoice_count == False:
+    #         invoices = []
+    #         for line in order.order_line:
+    #             #raise UserError("Holl1")
+    #             invoice_lines = self.env['account.move.line'].search([('purchase_line_id','=',line.id)])
+    #             if invoice_lines:
+    #                 raise UserError("Holla2")
+    #             for invoice_line in invoice_lines:
+    #                 invoice = self.env['account.move'].search([('id','=',invoice_line.move_id)])
+    #                 #raise UserError("Holla")
+    #                 invoices.append(invoice)
+    #         order.invoice_count = len(invoices)
+    #         order.invoice_ids = invoices
 
     @api.depends('provider_total','amount_total')
     def _compute_amount(self):
@@ -207,8 +208,8 @@ class PurchaseOrder(models.Model):
     
     def button_draft_claim(self):
         self.write({'state': 'draft claim'})
-        if self.api_ref:
-            self.action_upload_auth(1)
+        # if self.api_ref:
+        #     self.action_upload_auth(1)
         return {}
 		
     
@@ -278,6 +279,7 @@ class PurchaseOrderLine(models.Model):
         ('drug overcharge','Overcharge')],
         string = 'Variation Remarks')
     provider_price = fields.Float(string = 'Provider Price')
+    amount_vetted = fields.Float(string='Amount_vetted')
     x_m_id = fields.Integer(string="Migration_ID")
     account_analytic_id = fields.Many2one('account.analytic.account', string='Employer', related='order_id.analytic_id', store=True)
     enrollee_id = fields.Many2one('enrollee', related='order_id.enrollee_id', string='Enrollee', store=True, 
@@ -374,7 +376,7 @@ class PurchaseOrderLine(models.Model):
                 price_unit = line.env['account.tax']._fix_tax_included_price_company(
                     line.product_id.uom_id._compute_price(line.product_id.standard_price, po_line_uom),
                     line.product_id.supplier_taxes_id,
-                    line.taxes_id,
+                    line.tax_ids,
                     line.company_id,
                 )
                 price_unit = line.product_id.currency_id._convert(
@@ -389,7 +391,7 @@ class PurchaseOrderLine(models.Model):
                 
             pricelist = self.partner_id.tariff_id.id
 
-            price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
+            price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
             price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order, False)
             price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
             if self.partner_id.tariff_id:
@@ -448,7 +450,7 @@ class PurchaseOrderLine(models.Model):
                 line.price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
                 continue
 
-            price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.taxes_id, line.company_id) if seller else 0.0
+            price_unit = line.env['account.tax']._fix_tax_included_price_company(seller.price, line.product_id.supplier_taxes_id, line.tax_ids, line.company_id) if seller else 0.0
             price_unit = seller.currency_id._convert(price_unit, line.currency_id, line.company_id, line.date_order, False)
             price_unit = float_round(price_unit, precision_digits=max(line.currency_id.decimal_places, self.env['decimal.precision'].precision_get('Product Price')))
             
